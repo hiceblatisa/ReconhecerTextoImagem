@@ -1,0 +1,13 @@
+# Dependências do projeto ReconhecerTextoImagem
+
+# OCR e processamento de imagens
+pytesseract>=0.3.10
+opencv-python>=4.8.0
+pillow>=10.0.0
+PyMuPDF>=1.23.0
+
+# LLM e web
+requests>=2.31.0
+
+# Utilitários
+numpy>=1.24.0

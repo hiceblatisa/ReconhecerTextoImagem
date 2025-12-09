@@ -1,0 +1,15 @@
+[project]
+name = "ReconhecerrTextoImagem"
+version = "0.1.0"
+description = "Projeto de reconhecimento de texto em imagens usando Python e OCR"
+authors = [{name = "Isabela Sales"}]
+dependencies = [
+    "pillow",        # para manipulação de imagens
+    "pytesseract",   # OCR (reconhecimento de texto)
+    "requests",      # para chamadas HTTP (Ollama)
+    "PyMuPDF"        # para processar PDFs
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
