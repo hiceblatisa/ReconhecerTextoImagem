@@ -1,13 +1,23 @@
 # Dependências do projeto ReconhecerTextoImagem
 
 # OCR e processamento de imagens
+# usado em ReconhecerTextoImagem/validator.py para OCR (pytesseract.image_to_data)
 pytesseract>=0.3.10
+
+# usado em ReconhecerTextoImagem/validator.py para processamento de imagens e detecção de assinaturas (cv2)
 opencv-python>=4.8.0
+
+# útil para manipulação/transformação de imagens (Pillow). Não é usado diretamente nos arquivos atuais,
+# mas é recomendado para operações com imagens em projetos similares.
 pillow>=10.0.0
+
+# PyMuPDF (fitz) — usado em ReconhecerTextoImagem/validator.py para renderizar páginas do PDF em imagens
 PyMuPDF>=1.23.0
 
 # LLM e web
+# usado em ReconhecerTextoImagem/ollama.py para chamadas HTTP ao serviço Ollama
 requests>=2.31.0
 
 # Utilitários
+# usado em ReconhecerTextoImagem/validator.py para manipulação de buffers de imagem (numpy.frombuffer)
 numpy>=1.24.0

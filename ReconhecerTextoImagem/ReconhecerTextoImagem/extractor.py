@@ -1,6 +1,4 @@
 import re
-import json
-import time
 from typing import Dict, Optional
 
 
@@ -235,16 +233,10 @@ class DataExtractor:
         
         return ""
 
-    # def extract_ano(self, text: str) -> str:
-    #     """Extrai apenas o ano"""
-    #     match = re.search(self.patterns["ano_numero"], text)
-    #     if match:
-    #         return match.group(0)
-    #     return ""
+
 
     def extract_all(self, text: str) -> Dict[str, str]:
         text_clean = self.preprocess_text(text)
-        """Extrai todos os dados de uma vez"""
         return {
             "cpf_cnpj": self.extract_cpf_cnpj(text_clean),
             "nome_devedor": self.extract_nome_devedor(text_clean),
@@ -253,29 +245,6 @@ class DataExtractor:
             "tipo_operacao": self.extract_tipo_operacao(text_clean),
             "modelo_chassi": self.extract_modelo_chassi(text_clean),
             "placa": self.extract_placa(text_clean),
-            # "ano": self.extract_ano(text),
         }
 
 
-if __name__ == "__main__":
-    # Teste
-    extractor = DataExtractor()
-    
-    texto_teste = """
-    CONTRATO DE ALIENAÇÃO FIDUCIÁRIA
-    
-    Devedor: João da Silva Santos
-    CPF: 123.456.789-00
-    
-    Contrato nº 202312345678
-    
-    Chassi: 9BWSU29J005678901
-    Placa: ABC-1234
-    Modelo: Gol 1.6
-    Ano: 2023
-    
-    Tipo de Operação: Alienação Fiduciária
-    """
-    
-    dados = extractor.extract_all(texto_teste)
-    print(json.dumps(dados, indent=2, ensure_ascii=False))
