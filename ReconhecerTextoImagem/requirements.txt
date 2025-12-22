@@ -21,3 +21,5 @@ requests>=2.31.0
 # Utilitários
 # usado em ReconhecerTextoImagem/validator.py para manipulação de buffers de imagem (numpy.frombuffer)
 numpy>=1.24.0
+
+# Nota: suporte YOLO removido — ultralytics não é mais necessário

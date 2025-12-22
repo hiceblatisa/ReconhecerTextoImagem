@@ -1,0 +1,6 @@
+names:
+- assinatura
+nc: 1
+path: C:\Users\isabela.sales\Documents\Desenvolvimento\projetos-python\validacao-pdf\dataset
+train: images/train
+val: images/val
