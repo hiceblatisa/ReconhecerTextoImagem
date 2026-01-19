@@ -9,47 +9,28 @@ class OllamaFormatter:
     def __init__(self, url="http://localhost:11434", model="phi3:mini"):
         self.url = url
         self.model = model
-        # Aumentamos o timeout global para evitar quedas em textos longos
         self.timeout = 300
 
     def extract_json(self, texto: str) -> Optional[Dict]:
         """Extrai dados estruturados do texto"""
 
-        # Melhoramos o prompt para ser mais imperativo e definimos o esquema esperado
-        prompt = f"""Extraia do texto:
-- nome_devedor
-- cpf_cnpj  
-- contrato
-- grupo
-- cota
-- saldo_devedor
-- chassi
-- placa
-- uf
-- credora
-Retorne em JSON.
-Texto do contrato:
----
-{texto[:25000]}
----
-Retorne apenas o JSON:"""
+        prompt = f"""Extraia do texto: nome_devedor, cpf_cnpj, contrato, grupo, cota, saldo_devedor, chassi, placa, uf, credora. Retorne em JSON. Texto do contrato: {texto[:25000]} Retorne apenas o JSON:"""
 
         try:
-            # Enviamos a requisição com o timeout estendido
             response = requests.post(
                 f"{self.url}/api/generate",
                 json={
                     "model": self.model,
                     "prompt": prompt,
                     "stream": False,
-                    "format": "json",  # Força o Ollama a tentar responder em formato JSON
+                    "format": "json",
                     "options": {
-                        "temperature": 0.0,  # Zero torna a resposta determinística (mais precisa)
+                        "temperature": 0.0,
                         "num_predict": 1000,
-                        "num_ctx": 32000  # Aumenta a janela de contexto para ler o texto todo
+                        "num_ctx": 32000
                     }
                 },
-                timeout=self.timeout  # Alterado de 45 para 300
+                timeout=self.timeout
             )
 
             if response.status_code == 200:
