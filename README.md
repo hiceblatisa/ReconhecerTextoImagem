@@ -1,6 +1,6 @@
-# validacao-pdf
+# PDF Validation
 
-
+This project aims to utilize AI to identify, structure, and validate critical information with a high level of precision, reducing operational efforts.
 
 ## Getting started
 
