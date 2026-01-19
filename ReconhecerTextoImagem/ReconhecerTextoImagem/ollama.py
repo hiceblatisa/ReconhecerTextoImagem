@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import re
 from typing import Dict, Optional
 
 
@@ -8,70 +9,91 @@ class OllamaFormatter:
     def __init__(self, url="http://localhost:11434", model="phi3:mini"):
         self.url = url
         self.model = model
+        # Aumentamos o timeout global para evitar quedas em textos longos
         self.timeout = 300
-    
+
     def extract_json(self, texto: str) -> Optional[Dict]:
         """Extrai dados estruturados do texto"""
-        prompt = f"""Analise o texto abaixo e extraia os seguintes campos de um contrato de alienação fiduciária: nome_devedor (nome completo do devedor fiduciário), cpf_cnpj (CPF ou CNPJ do devedor), contrato (número do contrato), grupo, cota, valor do saldo devedor, chassi (número do chassi  placa, uf, credora (instituição financeira), retorne APENAS JSON válido com esses campos. Se algum campo não estiver presente, retorne-o como null.
-        Texto:
-        {texto[:30000]}
-        """
-        
+
+        # Melhoramos o prompt para ser mais imperativo e definimos o esquema esperado
+        prompt = f"""Extraia do texto:
+- nome_devedor
+- cpf_cnpj  
+- contrato
+- grupo
+- cota
+- saldo_devedor
+- chassi
+- placa
+- uf
+- credora
+Retorne em JSON.
+Texto do contrato:
+---
+{texto[:25000]}
+---
+Retorne apenas o JSON:"""
+
         try:
+            # Enviamos a requisição com o timeout estendido
             response = requests.post(
                 f"{self.url}/api/generate",
                 json={
                     "model": self.model,
                     "prompt": prompt,
                     "stream": False,
-                    "options": {"temperature": 0.1,
-                    "num_predict": 1000
-                    }     
+                    "format": "json",  # Força o Ollama a tentar responder em formato JSON
+                    "options": {
+                        "temperature": 0.0,  # Zero torna a resposta determinística (mais precisa)
+                        "num_predict": 1000,
+                        "num_ctx": 32000  # Aumenta a janela de contexto para ler o texto todo
+                    }
                 },
-                timeout=45
+                timeout=self.timeout  # Alterado de 45 para 300
             )
-            
+
             if response.status_code == 200:
                 result = response.json()
                 response_text = result.get('response', '')
-                
+
                 # Tentar extrair JSON da resposta
                 json_match = self._extract_json_from_text(response_text)
                 if json_match:
                     return json_match
-                
-                return {"raw_response": response_text[:500]}  # Fallback
-            
-            print(f"Erro Ollama: {response.status_code}")
+
+                return {"erro": "A IA respondeu mas o formato não era JSON", "raw": response_text[:200]}
+
+            print(f"Erro Ollama (Status {response.status_code}): {response.text}")
             return None
-            
+
         except requests.exceptions.Timeout:
-            print("Timeout na conexão com Ollama")
-            return None
+            print(f"Erro: O Ollama demorou mais de {self.timeout}s para processar.")
+            return {"erro": "Timeout na conexão com Ollama"}
         except Exception as e:
             print(f"Erro ao chamar Ollama: {e}")
-            return None
-    
+            return {"erro": str(e)}
+
     def _extract_json_from_text(self, text: str) -> Optional[Dict]:
-        """Tenta extrair JSON da resposta do modelo"""
-        import re
-        
-        json_pattern = r'\{[\s\S]*\}'
-        match = re.search(json_pattern, text)
-        
-        if match:
-            try:
-                return json.loads(match.group())
-            except json.JSONDecodeError:
-                pass
-        
+        """Tenta extrair JSON da resposta do modelo usando Regex"""
+        try:
+            # Tenta carregar direto primeiro
+            return json.loads(text)
+        except json.JSONDecodeError:
+            # Se falhar, tenta achar o bloco {} com Regex
+            json_pattern = r'\{[\s\S]*\}'
+            match = re.search(json_pattern, text)
+            if match:
+                try:
+                    return json.loads(match.group())
+                except:
+                    pass
         return None
 
 
 def extrair_dados_com_ollama(texto: str, modelo: str = "phi3:mini") -> Dict:
     """Interface principal para extração com Ollama"""
     formatter = OllamaFormatter(model=modelo)
-    
+
     try:
         resultado = formatter.extract_json(texto)
         return resultado or {}

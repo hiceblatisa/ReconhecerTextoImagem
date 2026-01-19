@@ -1,8 +1,0 @@
-pyproject.toml
-ReconhecerTextoImagem/__init__.py
-ReconhecerTextoImagem/main.py
-ReconhecerrTextoImagem.egg-info/PKG-INFO
-ReconhecerrTextoImagem.egg-info/SOURCES.txt
-ReconhecerrTextoImagem.egg-info/dependency_links.txt
-ReconhecerrTextoImagem.egg-info/requires.txt
-ReconhecerrTextoImagem.egg-info/top_level.txt

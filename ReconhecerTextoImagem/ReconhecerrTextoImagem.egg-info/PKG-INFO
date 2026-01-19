@@ -1,7 +1,0 @@
-Metadata-Version: 2.4
-Name: ReconhecerrTextoImagem
-Version: 0.1.0
-Summary: Projeto de reconhecimento de texto em imagens usando Python e OCR
-Author: Isabela Sales
-Requires-Dist: pillow
-Requires-Dist: pytesseract

@@ -1,5 +1,0 @@
-{
-    "github.copilot.chat.alternateGptPrompt.enabled": false,
-    "github.copilot.chat.agent.autoFix": true,
-    "github.copilot.chat.terminalChatLocation": "chatView"
-}

@@ -1,5 +1,0 @@
-path: datasets/signatures
-train: images/train
-val: images/val
-nc: 1
-names: ['signature']

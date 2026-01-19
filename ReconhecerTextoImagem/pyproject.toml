@@ -1,5 +1,5 @@
 [project]
-name = "ReconhecerrTextoImagem"
+name = "ReconhecerTextoImagem"
 version = "0.1.0"
 description = "Projeto de reconhecimento de texto em imagens usando Python e OCR"
 authors = [{name = "Isabela Sales"}]
